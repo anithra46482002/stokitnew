@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from "react";
 import api from "./api";
 import { errorText } from "./uiUtils";
@@ -7,7 +8,7 @@ export default function ManageAllocationsPage({ canWrite = false }) {
   const [offerId, setOfferId] = React.useState(""), [user, setUser] = React.useState(""), [month, setMonth] = React.useState("");
   const [applied, setApplied] = React.useState({}), [businessMonth, setBusinessMonth] = React.useState(""), [reportMonth, setReportMonth] = React.useState(""), [page, setPage] = React.useState(1), [count, setCount] = React.useState(0);
   const [busy, setBusy] = React.useState(false), [error, setError] = React.useState(""), [notice, setNotice] = React.useState("");
-  const [form, setForm] = React.useState(null);
+  const [form, setForm] = React.useState(null); const [loaded, setLoaded] = React.useState(false);
   const load = React.useCallback(async () => {
     setBusy(true); setError("");
     try {
@@ -15,7 +16,7 @@ export default function ManageAllocationsPage({ canWrite = false }) {
         api.get("allocations", { params: { page, page_size: 20, ...applied } }),
         api.get("advance-payments", { params: { page_size: 100 } })
       ]);
-      setRows(a.data.results || []); setCount(Number(a.data.count || 0)); setOffers(o.data.results || []);
+      setRows(a.data.results || []); setLoaded(true); setCount(Number(a.data.count || 0)); setOffers(o.data.results || []);
       setBusinessMonth(String(a.data.as_of_date || "").slice(0, 7)); setReportMonth(String(a.data.month || ""));
     } catch (e) { setError(errorText(e)); } finally { setBusy(false); }
   }, [page, applied]);
@@ -57,7 +58,7 @@ export default function ManageAllocationsPage({ canWrite = false }) {
     {error && <p className="error" role="alert">{error}</p>}{notice && <p className="success" role="status">{notice}</p>}{busy && <p className="empty" role="status">Loading allocation records…</p>}
     <div className="table-wrap allocation-table-wrap"><table className="allocation-table"><thead><tr>{columns.map(c => <th key={c}>{c}</th>)}</tr></thead><tbody>
       {rows.map(r => <tr key={r.id}><td>{r.id}</td><td>{r.offer_name}</td><td>{r.full_name || r.username || `User #${r.user_id}`}</td><td>{money(r.payment_amount)}</td><td>{r.bonus_percentage}%</td><td>{r.duration_months}</td><td>{money(r.total_credit)}</td><td>{money(r.monthly_credit_release)}</td><td>{money(r.monthly_bonus ?? r.monthly_credit_release)}</td><td>{money(r.carry_forward)}</td><td>{money(r.used_this_month)}</td><td>{money(r.remaining_this_month)}</td><td>{money(r.lifetime_used_credit)}</td><td>{r.start_date}</td><td>{r.end_date}</td><td><span className={`allocation-status status-${String(r.status).toLowerCase()}`}>{r.status}</span></td><td>{canWrite && <div className="row-actions"><button disabled={busy} onClick={() => edit(r)}>Edit</button><button className="danger-action" disabled={busy || r.status === "CANCELLED"} onClick={() => remove(r)}>Delete</button></div>}</td></tr>)}
-    </tbody></table>{!busy && rows.length === 0 && <p className="empty">No allocations match these filters.</p>}</div>
+    </tbody></table>{loaded && !busy && !error && rows.length === 0 && <EmptyState />}</div>
     <div className="pagination"><span>{count} allocation(s) · Page {page}</span><button disabled={busy || page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button><button disabled={busy || page * 20 >= count} onClick={() => setPage(p => p + 1)}>Next</button></div>
     {form && <div className="modal-backdrop"><section className="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="allocation-editor-title">
       <h2 id="allocation-editor-title">Edit allocation #{form.id}</h2>

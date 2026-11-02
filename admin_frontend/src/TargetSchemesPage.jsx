@@ -1,3 +1,4 @@
+import { EmptyState, EmptyRow } from './EmptyState';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Home, Target as TargetIcon, Plus, RefreshCw, Pencil, Trash2, Power, X, Search } from "lucide-react";
@@ -316,7 +317,7 @@ export default function TargetSchemesPage({ canWrite = false }) {
                   </tr></thead>
                   <tbody>
                     {loading && <tr><td colSpan={11} className="tsp-empty">Loading targets...</td></tr>}
-                    {!loading && visibleTargets.length === 0 && <tr><td colSpan={11} className="tsp-empty">No targets found.</td></tr>}
+                    {!loading && !error && visibleTargets.length === 0 && <EmptyRow colSpan={11} />}
                     {!loading && visibleTargets.map((t, i) => {
                       const rows = assignedByTarget.get(String(t.id)) || [];
                       const achieved = rows.filter(isAchieved).length;
@@ -362,7 +363,7 @@ export default function TargetSchemesPage({ canWrite = false }) {
                 <table className="tsp-table">
                   <thead><tr><th>User</th><th>Target</th><th>Achieved Amount</th><th>Orders</th><th>Status</th><th>Achieved Date</th></tr></thead>
                   <tbody>
-                    {assignments.length === 0 && <tr><td colSpan={6} className="tsp-empty">No assignments yet.</td></tr>}
+                    {!loading && !error && assignments.length === 0 && <EmptyRow colSpan={6} />}
                     {assignments.map((a) => (
                       <tr key={a.assignment_id}>
                         <td>{userLabel(a.user_id)}</td><td>{targetName(a.target_id)}</td><td>{money(a.achieved_amount)}</td>
@@ -383,7 +384,7 @@ export default function TargetSchemesPage({ canWrite = false }) {
                 <table className="tsp-table">
                   <thead><tr><th>Rank</th><th>User</th><th>Total Achieved</th><th>Orders</th><th>Targets</th></tr></thead>
                   <tbody>
-                    {topAchievers.length === 0 && <tr><td colSpan={5} className="tsp-empty">No achievements recorded yet.</td></tr>}
+                    {!loading && !error && topAchievers.length === 0 && <EmptyRow colSpan={5} />}
                     {topAchievers.map((r, i) => (
                       <tr key={r.user_id}><td>{i + 1}</td><td>{userLabel(r.user_id)}</td><td>{money(r.amount)}</td><td>{r.orders}</td><td>{r.targets}</td></tr>
                     ))}
@@ -452,7 +453,7 @@ export default function TargetSchemesPage({ canWrite = false }) {
                   <button type="button" className="tsp-btn" onClick={() => setSelected([])}>Deselect All</button>
                 </div>
                 <div className="tsp-user-list">
-                  {shownUsers.length === 0 && <p className="tsp-empty">No active users found.</p>}
+                  {!loading && !error && shownUsers.length === 0 && <EmptyState />}
                   {shownUsers.map((u) => {
                     const id = String(u.id);
                     const had = alreadyAssigned.has(id);

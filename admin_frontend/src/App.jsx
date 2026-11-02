@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 /* oxlint-disable react/set-state-in-effect -- intentional API-loading and related-form initialization effects. */
 import React from "react";
 import {
@@ -1230,7 +1231,7 @@ function ResourcePage({ module }) {
         </p>
       )}
       {data && rows.length === 0 && !totals && (
-        <p className="empty">No records returned by this API.</p>
+        <EmptyState />
       )}
       {rows.length > 0 && (
         <div className="table-wrap">
@@ -1423,7 +1424,6 @@ function ResourcePage({ module }) {
 }
 
 function CartDiscountPage({ canWrite }) {
-  const [config, setConfig] = React.useState(null);
   const [form, setForm] = React.useState({ enabled: false, minimum_subtotal: "", fixed_discount_amount: "" });
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -1432,7 +1432,6 @@ function CartDiscountPage({ canWrite }) {
     setBusy(true); setError("");
     try {
       const response = await api.get("cart-discount-settings");
-      setConfig(response.data);
       setForm({ enabled: Boolean(response.data.enabled), minimum_subtotal: String(response.data.minimum_subtotal ?? ""), fixed_discount_amount: String(response.data.fixed_discount_amount ?? "") });
     } catch (err) { setError(err.response?.data?.detail || err.response?.data?.message || (err.response?.status ? `Could not load cart discount settings (HTTP ${err.response.status}).` : "Could not reach the admin API. Check that Django is running.")); }
     finally { setBusy(false); }
@@ -1443,7 +1442,7 @@ function CartDiscountPage({ canWrite }) {
     const threshold = Number(form.minimum_subtotal), amount = Number(form.fixed_discount_amount);
     if (!Number.isFinite(threshold) || threshold < 0 || !Number.isFinite(amount) || amount < 0) { setError("Enter valid, finite, non-negative amounts for both fields."); return; }
     setBusy(true);
-    try { const response = await api.put("cart-discount-settings", { enabled: form.enabled, minimum_subtotal: form.minimum_subtotal, fixed_discount_amount: form.fixed_discount_amount }); setConfig(response.data); setForm({ enabled: Boolean(response.data.enabled), minimum_subtotal: String(response.data.minimum_subtotal), fixed_discount_amount: String(response.data.fixed_discount_amount) }); setNotice("Cart discount settings saved."); }
+    try { const response = await api.put("cart-discount-settings", { enabled: form.enabled, minimum_subtotal: form.minimum_subtotal, fixed_discount_amount: form.fixed_discount_amount }); setForm({ enabled: Boolean(response.data.enabled), minimum_subtotal: String(response.data.minimum_subtotal), fixed_discount_amount: String(response.data.fixed_discount_amount) }); setNotice("Cart discount settings saved."); }
     catch (err) { const body = err.response?.data; const fieldErrors = body?.errors && typeof body.errors === "object" ? Object.values(body.errors).join(" ") : ""; setError(body?.detail || body?.message || fieldErrors || (err.response?.status ? `Save failed (HTTP ${err.response.status}). The server did not confirm that settings were saved.` : "Could not reach the admin API. Check that Django is running.")); }
     finally { setBusy(false); }
   }
@@ -1456,7 +1455,6 @@ function CartDiscountPage({ canWrite }) {
       <label>Fixed cart discount amount (?)<input type="number" min="0" step="0.01" required value={form.fixed_discount_amount} onChange={e=>setForm(v=>({...v,fixed_discount_amount:e.target.value}))} disabled={!canWrite || busy}/></label>
       {canWrite && <button className="primary" type="submit" disabled={busy}>{busy ? "Saving?" : "Save Changes"}</button>}
     </form>
-    {config && <div className="table-wrap"><h2>Saved configuration</h2><p>Status: {config.enabled ? "Enabled" : "Disabled"}</p><p>Minimum eligible subtotal: ?{config.minimum_subtotal}</p><p>Fixed discount: ?{config.fixed_discount_amount}</p><p>Last updated: {config.updated_at || "Not recorded"}</p></div>}
   </section>;
 }
 

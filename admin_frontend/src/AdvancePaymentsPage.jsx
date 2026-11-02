@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
@@ -10,12 +11,12 @@ export default function AdvancePaymentsPage({ formOnly = false }) {
   const [rows, setRows] = React.useState([]);
   const [form, setForm] = React.useState(formOnly ? { offer_name: '', payment_amount: '', bonus_percentage: '', duration_months: String(DEFAULT_ADVANCE_OFFER_MONTHS), status: 'ACTIVE' } : null);
   const [error, setError] = React.useState('');
-  const [busy, setBusy] = React.useState(false);
+  const [busy, setBusy] = React.useState(false); const [loaded, setLoaded] = React.useState(false);
 
   const load = React.useCallback(async () => {
     try {
       const response = await api.get('advance-payments');
-      setRows(response.data.results || []);
+      setRows(response.data.results || []); setLoaded(true);
     } catch (e) {
       setError(e.response?.data?.detail || e.message || 'Unable to load offers');
     }
@@ -148,7 +149,7 @@ export default function AdvancePaymentsPage({ formOnly = false }) {
             <td><button type="button" onClick={() => { setForm({ ...offer }); setError(''); }}>Edit</button> <button type="button" onClick={() => remove(offer)}>Delete</button></td>
           </tr>)}</tbody>
         </table>
-        {rows.length === 0 && <p>No offers found.</p>}
+        {loaded && !error && rows.length === 0 && <EmptyState />}
       </div>
       {form && !formOnly && <div className="apo-backdrop"><section className="apo-modal"><button type="button" className="apo-close" onClick={() => setForm(null)}>Close</button>{offerForm(form)}</section></div>}
     </section>
