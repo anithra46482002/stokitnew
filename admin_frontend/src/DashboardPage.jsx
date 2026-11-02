@@ -1,3 +1,4 @@
+import { EmptyRow } from './EmptyState';
 import React from 'react';
 import { Package, ShoppingCart, User, IndianRupee, Receipt, TriangleAlert } from 'lucide-react';
 import api from './api';
@@ -40,7 +41,7 @@ export default function DashboardPage() {
           <thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Total</th></tr></thead>
           <tbody>
             {recent.map((order) => <tr key={order.order_id}><td>{order.order_id}</td><td>{order.full_name}</td><td><span className="sk-pill">{order.status}</span></td><td>{money(order.total_amount)}</td></tr>)}
-            {recent.length === 0 && <tr><td colSpan="4" className="empty">No orders yet.</td></tr>}
+            {recent.length === 0 && <EmptyRow colSpan="4" />}
           </tbody>
         </table></div>
       </section>
@@ -50,7 +51,7 @@ export default function DashboardPage() {
           <thead><tr><th>Product</th><th>Variant</th><th>Stock</th></tr></thead>
           <tbody>
             {lowStock.map((row) => <tr key={row.variant_id}><td>{row.product}</td><td>{row.variant}</td><td>{row.stock}</td></tr>)}
-            {lowStock.length === 0 && <tr><td colSpan="3" className="empty">No low-stock variants.</td></tr>}
+            {lowStock.length === 0 && <EmptyRow colSpan="3" />}
           </tbody>
         </table></div>
       </section>

@@ -1,3 +1,4 @@
+import { EmptyRow } from './EmptyState';
 import React from 'react';
 import { Tag, Image as ImageIcon, ToggleLeft, Plus, List, Pencil, Trash2, CircleCheck, CircleX } from 'lucide-react';
 import api, { uploadImage } from './api';
@@ -130,7 +131,7 @@ export default function CategoriesPage({ canWrite }) {
                 </tr>
               ))}
               {loading && <tr><td colSpan="4" className="empty" role="status">Loading categories...</td></tr>}
-              {!loading && !error && rows.length === 0 && <tr><td colSpan="4" className="empty">No categories found.</td></tr>}
+              {!loading && !error && rows.length === 0 && <EmptyRow colSpan="4" />}
             </tbody>
           </table>
         </div>

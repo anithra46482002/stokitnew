@@ -1,3 +1,4 @@
+import { EmptyRow } from './EmptyState';
 import React from 'react';
 import { Search, Plus, Pencil, Trash2, Warehouse } from 'lucide-react';
 import api, { uploadImage } from './api';
@@ -288,7 +289,7 @@ export default function ProductsPage({ canWrite }) {
                 </tr>
               ))}
               {loading && <tr><td colSpan={canWrite ? 7 : 6} className="empty" role="status">Loading products...</td></tr>}
-              {!loading && !error && rows.length === 0 && <tr><td colSpan={canWrite ? 7 : 6} className="empty">No products found.</td></tr>}
+              {!loading && !error && rows.length === 0 && <EmptyRow colSpan={canWrite ? 7 : 6} />}
             </tbody>
           </table>
         </div>

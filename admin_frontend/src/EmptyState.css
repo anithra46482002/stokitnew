@@ -1,0 +1,2 @@
+.empty-state { display: flex; align-items: center; justify-content: center; min-height: 120px; margin: 0; padding: 35px 20px; text-align: center; font-size: 15px; font-weight: 500; color: var(--sk-muted, var(--muted, #667085)); }
+td.empty-state { display: table-cell; vertical-align: middle; }

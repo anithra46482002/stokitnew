@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from 'react';
 import { Plus, List, Pencil, Trash2, Info } from 'lucide-react';
 import api, { uploadImage } from './api';
@@ -161,7 +162,7 @@ export default function BannersPage({ canWrite }) {
       {notice && <p className="success" role="status">{notice}</p>}
       <div className="sk-list-head"><h2><List size={20} /> Manage Banners</h2></div>
       {loading && <p className="empty" role="status">Loading banners...</p>}
-      {!loading && !error && rows.length === 0 && <p className="empty">No banners yet.</p>}
+      {!loading && !error && rows.length === 0 && <EmptyState />}
       <div className="sk-banner-grid">
         {rows.map((banner) => <BannerCard key={banner.id} banner={banner} canWrite={canWrite} onChanged={changed} onError={setError} />)}
       </div>

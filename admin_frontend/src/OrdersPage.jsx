@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, RefreshCw, Search, X, UserCheck, Eye, Pencil, Trash2, List, Calendar, Filter, Palette, Warehouse, IndianRupee, Clock, ArrowLeft, Home as HomeIcon } from 'lucide-react';
@@ -255,7 +256,7 @@ export default function OrdersPage({ canAssign }) {
           <span className="sk-muted">{data?.count ?? 0} orders</span>
         </div>
         {loading && <p className="empty" role="status">Loading orders...</p>}
-        {!loading && !error && orders.length === 0 && <p className="empty">No orders match these filters.</p>}
+        {!loading && !error && orders.length === 0 && <EmptyState />}
         {orders.length > 0 && (
           <div className="table-wrap">
             <table className="sk-table sk-upper-head">

@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from 'react';
 import { Bell, Mail, Plus, Eye, Trash2, User, Users, Send } from 'lucide-react';
 import api from './api';
@@ -120,7 +121,7 @@ export default function NotificationsPage({ canWrite }) {
 
       <section className="sk-card sk-flush">
         {loading && <p className="empty" role="status">Loading notifications...</p>}
-        {!loading && !error && rows.length === 0 && <p className="empty">No notifications have been sent yet.</p>}
+        {!loading && !error && rows.length === 0 && <EmptyState />}
         {rows.length > 0 && (
           <div className="table-wrap">
             <table className="sk-table sk-upper-head">

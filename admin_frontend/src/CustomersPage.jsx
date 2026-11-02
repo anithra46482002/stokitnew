@@ -1,3 +1,4 @@
+import { EmptyState } from './EmptyState';
 import React from 'react';
 import { Users, UserPlus, Crown, Tag, Palette, Warehouse, Eye, Pencil, Trash2, User, X } from 'lucide-react';
 import api, { uploadImage } from './api';
@@ -229,7 +230,7 @@ export default function CustomersPage({ role }) {
 
       <section className="sk-card sk-flush">
         {loading && <p className="empty" role="status">Loading customers...</p>}
-        {!loading && !error && rows.length === 0 && <p className="empty">{filtered ? 'No customers match these filters.' : 'No customers yet.'}</p>}
+        {!loading && !error && rows.length === 0 && <EmptyState />}
         {rows.length > 0 && (
           <div className="table-wrap">
             <table className="sk-table sk-upper-head cus-table">
