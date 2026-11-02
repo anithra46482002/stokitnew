@@ -1,0 +1,115 @@
+/* Admin Profile, Change Password dialog and Forgot Password page. Uses the --sk-* tokens from theme.css
+   (dark green + white); every state is conveyed with text as well as colour. */
+.sk-profile { display: grid; gap: 18px; max-width: 760px; }
+.sk-profile-card { background: var(--sk-surface, #fff); border: 1px solid var(--sk-border, #dce5de); border-radius: 16px; box-shadow: var(--shadow-sm, none); overflow: hidden; }
+.sk-profile-head { display: flex; align-items: center; gap: 16px; padding: 22px 24px; background: linear-gradient(135deg, var(--sk-deep, #0b281d), var(--sk-primary, #123d2b)); color: #fff; }
+.sk-profile-avatar { flex: 0 0 56px; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: var(--sk-primary, #123d2b); font-size: 22px; font-weight: 800; }
+.sk-profile-head h2, .sk-profile-head .sk-profile-identity h2 { margin: 0; font-size: 20px; color: #fff !important; overflow-wrap: anywhere; }
+.sk-profile-head p { margin: 2px 0 0; color: #cfe5d7; font-size: 13px; overflow-wrap: anywhere; }
+.sk-profile-list { margin: 0; padding: 6px 24px 10px; display: grid; }
+.sk-profile-row { display: grid; grid-template-columns: 170px 1fr; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--sk-border, #dce5de); }
+.sk-profile-row:last-child { border-bottom: 0; }
+.sk-profile-row dt { color: var(--sk-muted, #64736a); font-size: 13px; font-weight: 700; }
+.sk-profile-row dd { margin: 0; color: var(--sk-text, #17251d); font-weight: 600; overflow-wrap: anywhere; }
+.sk-profile-row dd .sk-empty { color: var(--sk-muted, #64736a); font-weight: 500; font-style: italic; }
+.sk-role-chip { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--sk-tint, #f1f7f3); border: 1px solid var(--sk-border, #dce5de); color: var(--sk-primary, #123d2b); font-size: 12px; font-weight: 800; letter-spacing: .03em; }
+.sk-status { display: inline-flex; align-items: center; gap: 7px; padding: 3px 11px; border-radius: 999px; font-size: 12px; font-weight: 800; border: 1px solid transparent; }
+.sk-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.sk-status-active { color: var(--sk-success, #237a45); background: var(--sk-success-bg, #eef7f1); border-color: var(--sk-success-border, #bfdcc9); }
+.sk-status-inactive { color: var(--sk-error, #b42318); background: var(--sk-error-bg, #fef3f2); border-color: var(--sk-error-border, #f3c7c2); }
+.sk-profile-actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 24px 22px; border-top: 1px solid var(--sk-border, #dce5de); background: var(--sk-tint, #f1f7f3); }
+.sk-profile-skeleton { height: 220px; border-radius: 16px; background: linear-gradient(90deg, #eef2ef 25%, #e3ebe5 50%, #eef2ef 75%); background-size: 200% 100%; animation: sk-shimmer 1.2s linear infinite; }
+@keyframes sk-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .sk-profile-skeleton { animation: none; } }
+
+.sk-msg { margin: 0; padding: 11px 14px; border-radius: 10px; font-size: 14px; border: 1px solid transparent; overflow-wrap: anywhere; }
+.sk-msg-error { color: var(--sk-error, #b42318); background: var(--sk-error-bg, #fef3f2); border-color: var(--sk-error-border, #f3c7c2); }
+.sk-msg-success { color: var(--sk-success, #237a45); background: var(--sk-success-bg, #eef7f1); border-color: var(--sk-success-border, #bfdcc9); }
+.sk-msg-info { color: var(--sk-primary, #123d2b); background: var(--sk-tint, #f1f7f3); border-color: var(--sk-border, #dce5de); }
+
+.sk-modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(11, 40, 29, .55); overflow-y: auto; }
+.sk-modal { width: min(480px, 100%); max-height: 94vh; overflow-y: auto; background: var(--sk-surface, #fff); color: var(--sk-text, #17251d); border-radius: 16px; box-shadow: var(--shadow-md, 0 14px 34px rgba(11, 40, 29, .2)); border: 1px solid var(--sk-border, #dce5de); }
+.sk-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 22px 8px; }
+.sk-modal-head h2 { margin: 0; font-size: 20px; }
+.sk-modal-head p { margin: 4px 0 0; color: var(--sk-muted, #64736a); font-size: 13px; }
+.sk-modal-close { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border-radius: 10px; border: 1px solid var(--sk-border, #dce5de); background: #fff; color: var(--sk-text, #17251d); cursor: pointer; }
+.sk-modal-body { display: grid; gap: 14px; padding: 8px 22px 22px; }
+.sk-steps { display: flex; gap: 6px; margin: 0; padding: 0 22px; list-style: none; }
+.sk-steps li { flex: 1; padding-top: 8px; border-top: 4px solid var(--sk-border, #dce5de); color: var(--sk-muted, #64736a); font-size: 11px; font-weight: 700; }
+.sk-steps li.is-done, .sk-steps li.is-current { border-top-color: var(--sk-accent, #287a50); }
+.sk-steps li.is-current { color: var(--sk-primary, #123d2b); }
+
+.sk-form { display: grid; gap: 14px; }
+.sk-field { display: grid; gap: 6px; font-size: 13px; font-weight: 700; color: var(--sk-text, #17251d); }
+.sk-field input { width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #c9d6cd; border-radius: 10px; font-size: 15px; background: #fff; color: #111827; }
+.sk-field input[aria-invalid="true"] { border-color: var(--sk-error, #b42318); }
+.sk-field-error { margin: 0; color: var(--sk-error, #b42318); font-size: 12px; font-weight: 600; }
+.sk-field-hint { margin: 0; color: var(--sk-muted, #64736a); font-size: 12px; font-weight: 500; }
+.sk-input-wrap { position: relative; display: flex; }
+.sk-input-wrap input { padding-right: 46px; }
+.sk-eye { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 8px; background: transparent; color: var(--sk-muted, #64736a); cursor: pointer; }
+.sk-otp-input { letter-spacing: .5em; text-align: center; font-size: 22px !important; font-weight: 800; }
+.sk-form-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.sk-link-button { padding: 6px 2px; border: 0; background: transparent; color: var(--sk-accent, #287a50); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.sk-link-button:disabled { color: var(--sk-muted, #64736a); cursor: not-allowed; text-decoration: none; }
+.sk-forgot-link { display: inline-block; margin-top: 12px; color: var(--sk-accent, #287a50); font-weight: 700; }
+.sk-forgot-card { width: min(440px, 100%); }
+.sk-done { display: grid; gap: 14px; justify-items: start; }
+
+@media (max-width: 600px) {
+  .sk-profile-row { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
+  .sk-profile-head, .sk-profile-list, .sk-profile-actions { padding-left: 16px; padding-right: 16px; }
+  .sk-modal-backdrop { align-items: end; padding: 0; }
+  .sk-modal { border-radius: 16px 16px 0 0; max-height: 100vh; }
+  .sk-form-actions > button { flex: 1 1 100%; }
+}
+.topbar-profile-link { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border: 1px solid var(--sk-border, #dce5de); border-radius: 10px; color: var(--sk-primary, #123d2b); font-weight: 700; font-size: 13px; text-decoration: none; background: #fff; }
+.topbar-profile-link:hover, .topbar-profile-link.active { background: var(--sk-hover, #eaf2ec); }
+
+.sk-profile-heading { align-items: center; gap: 12px; }
+.sk-profile-heading-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.sk-profile-heading-actions button, .sk-profile-image-actions > button { border: 1px solid var(--sk-border, #dce5de); border-radius: 10px; background: #fff; color: var(--sk-primary, #123d2b); padding: 9px 14px; font-weight: 700; cursor: pointer; }
+.sk-profile-image { object-fit: cover; border: 2px solid rgba(255,255,255,.8); }
+.sk-profile-identity { display: grid; gap: 5px; min-width: 0; }
+.sk-profile-identity .sk-status { width: fit-content; }
+.sk-profile-section { padding: 20px 24px; border-top: 1px solid var(--sk-border, #dce5de); }
+.sk-profile-section h3 { margin: 0 0 12px; color: var(--sk-primary, #123d2b); font-size: 17px; }
+.sk-profile-note { margin: 0 0 12px; color: var(--sk-muted, #64736a); font-size: 13px; line-height: 1.5; }
+.sk-profile-image-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.sk-profile-file-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.sk-profile-file-input:focus-visible + .sk-profile-file-label { outline: 3px solid var(--sk-accent, #287a50); outline-offset: 3px; }
+.sk-profile-file-label { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.sk-profile-link { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; border: 1px solid var(--sk-border, #dce5de); border-radius: 10px; color: var(--sk-primary, #123d2b); background: #fff; font-weight: 700; text-decoration: none; }
+.sk-profile-link:hover, .sk-profile-heading-actions button:hover, .sk-profile-image-actions > button:hover { background: var(--sk-hover, #eaf2ec); }
+.sk-profile-link:focus-visible, .sk-profile-heading-actions button:focus-visible, .sk-profile-image-actions > button:focus-visible { outline: 3px solid var(--sk-accent, #287a50); outline-offset: 2px; }
+.sk-profile-security-actions { padding: 0; border: 0; background: transparent; }
+@media (max-width: 600px) {
+  .sk-profile-heading { align-items: flex-start; flex-direction: column; }
+  .sk-profile-section { padding: 16px; }
+  .sk-profile-heading-actions { width: 100%; }
+  .sk-profile-heading-actions button { flex: 1; }
+}
+
+.sk-identity-form { padding: 16px 0; border-top: 1px solid var(--sk-border, #dce5de); }
+.sk-identity-form h4 { margin: 0; color: var(--sk-primary, #123d2b); font-size: 15px; }
+.sk-identity-form > button, .sk-identity-form .sk-form-actions button { justify-self: start; border: 1px solid var(--sk-border, #dce5de); border-radius: 10px; padding: 9px 14px; background: #fff; color: var(--sk-primary, #123d2b); font-weight: 700; cursor: pointer; }
+.sk-identity-form button:disabled { opacity: .55; cursor: not-allowed; }
+
+/* OTP expiry / resend countdowns and the two-step email verification groups (AccountIdentitySettings) */
+.sk-otp-stage { display: grid; gap: 8px; padding: 12px; margin: 8px 0; border: 1px solid #d8e2dc; border-radius: 8px; }
+.sk-otp-stage h5 { margin: 0; font-size: 13px; font-weight: 600; color: #234d38; }
+.sk-otp-timer { margin: 0; font-size: 13px; color: #4a5a52; font-variant-numeric: tabular-nums; }
+.sk-otp-timer strong { color: #1f6f4a; }
+.sk-otp-expired { color: #a32121; }
+.sk-otp-verified { color: #1f6f4a; font-weight: 600; }
+.sk-otp-stage button, .sk-identity-form .button-row button:not(.primary-action) { justify-self: start; border: 1px solid var(--sk-border, #dce5de); border-radius: 10px; padding: 9px 14px; background: #fff; color: var(--sk-primary, #123d2b); font-weight: 700; cursor: pointer; }
+.sk-otp-stage button:disabled, .sk-identity-form .button-row button:disabled { opacity: .55; cursor: not-allowed; }
+.sk-identity-form .button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.sk-password-input-wrap { position: relative; display: block; width: 100%; }
+.sk-password-input-wrap input { width: 100%; box-sizing: border-box; padding-right: 52px; }
+.sk-password-toggle { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 7px; border: 0; border-radius: 8px; background: transparent; color: var(--sk-muted, #64736a); cursor: pointer; }
+.sk-password-toggle:hover { background: var(--sk-tint, #f1f7f3); color: var(--sk-primary, #123d2b); }
+.sk-password-toggle:focus-visible { outline: 2px solid var(--sk-primary, #123d2b); outline-offset: 2px; }
+.sk-password-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sk-password-toggle:disabled { cursor: not-allowed; opacity: .5; }

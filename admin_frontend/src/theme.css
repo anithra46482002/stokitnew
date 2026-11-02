@@ -1,0 +1,299 @@
+/* StokIt Admin - dark green and white theme.
+   Loaded after every other stylesheet (see main.jsx), so these tokens and rules are the single source of truth for
+   colour. Semantic states stay distinct: errors red, success green, warnings amber. */
+
+:root {
+  --sk-primary: #123D2B;
+  --sk-deep: #0B281D;
+  --sk-secondary: #1F5A40;
+  --sk-accent: #287A50;
+  --sk-page: #F4F7F5;
+  --sk-surface: #FFFFFF;
+  --sk-text: #17251D;
+  --sk-muted: #64736A;
+  --sk-border: #DCE5DE;
+  --sk-input-bg: #FFFFFF;
+  --sk-hover: #EAF2EC;
+  --sk-success: #237A45;
+  --sk-error: #B42318;
+  --sk-warning: #9A6700;
+  --sk-error-bg: #FEF3F2;
+  --sk-error-border: #F3C7C2;
+  --sk-success-bg: #EEF7F1;
+  --sk-success-border: #BFDCC9;
+  --sk-warning-bg: #FFF7E0;
+  --sk-warning-border: #EBD28A;
+  --sk-tint: #F1F7F3;
+  --sk-ring: rgba(40, 122, 80, .22);
+
+  /* Names used by the older stylesheets, remapped so every existing rule picks up the palette. */
+  --primary: var(--sk-primary);
+  --primary-hover: var(--sk-deep);
+  --teal: var(--sk-accent);
+  --page: var(--sk-page);
+  --surface: var(--sk-surface);
+  --text: var(--sk-text);
+  --text-h: var(--sk-text);
+  --muted: var(--sk-muted);
+  --border: var(--sk-border);
+  --success: var(--sk-success);
+  --warning: var(--sk-warning);
+  --danger: var(--sk-error);
+  --sk-green: var(--sk-primary);
+  --sk-green-dark: var(--sk-deep);
+  --sk-bg: var(--sk-page);
+  --accent: var(--sk-accent);
+  --accent-bg: rgba(40, 122, 80, .1);
+  --accent-border: rgba(40, 122, 80, .5);
+  --shadow-sm: 0 1px 3px rgba(11, 40, 29, .06), 0 1px 2px rgba(11, 40, 29, .04);
+  --shadow-md: 0 14px 34px rgba(11, 40, 29, .12);
+  color-scheme: light;
+}
+
+html, body { background: var(--sk-page); color: var(--sk-text); }
+body, .app-shell { background: var(--sk-page); color: var(--sk-text); }
+::selection { background: #CFE5D7; color: var(--sk-text); }
+
+/* ------------------------------------------------------------ focus */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--sk-accent); outline-offset: 2px;
+}
+.sidebar a:focus-visible, .sidebar button:focus-visible { outline-color: #BFE5CD; }
+
+/* ------------------------------------------------------------ sidebar */
+.sidebar { background: var(--sk-deep); color: #E6F1EA; border-right: 1px solid rgba(255, 255, 255, .06); }
+.sidebar .brand-row { border-bottom-color: rgba(255, 255, 255, .12); }
+.sidebar .brand-mark { background: var(--sk-accent); box-shadow: none; }
+.sidebar h2 { color: #fff; }
+.sidebar p, .sidebar .sidebar-foot { color: #A9C4B4; }
+.sidebar .nav-caption { color: #8DB09C; }
+.sidebar .role-label { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .12); color: #E6F1EA !important; }
+.sidebar a, .sidebar nav a { color: #E6F1EA; }
+.sidebar a:hover, .sidebar nav a:hover { background: rgba(255, 255, 255, .09); color: #fff; }
+.sidebar a.active, .sidebar nav a.active { background: var(--sk-secondary); color: #fff; box-shadow: inset 3px 0 0 #BFE5CD; }
+.sidebar svg { color: inherit; }
+.sidebar-overlay { background: rgba(11, 40, 29, .55) !important; }
+
+/* ------------------------------------------------------------ header */
+.topbar { background: #fff; border-bottom: 1px solid var(--sk-border); color: var(--sk-primary); box-shadow: none; }
+.topbar .breadcrumb { color: var(--sk-muted); }
+.main-area .topbar .breadcrumb strong { color: var(--sk-primary) !important; }
+.topbar-user strong { color: var(--sk-primary); }
+.topbar-user small { color: var(--sk-muted); }
+.user-avatar { background: var(--sk-hover); color: var(--sk-primary); }
+
+/* ------------------------------------------------------------ text */
+.main-area :is(h1, h2, h3, h4, h5, h6), .modal-backdrop :is(h1, h2, h3, h4, h5, h6), .login-card :is(h1, h2, h3, h4, h5, h6) { color: var(--sk-primary) !important; }
+.main-area table thead th, .modal-backdrop table thead th { color: var(--sk-primary) !important; }
+.editor-dialog h2 { color: var(--sk-primary) !important; }
+.sk-page-title h1, .ord-head h1, .apo-head h1, .apo .apo-new-form h2 { color: var(--sk-primary) !important; }
+.sk-page-title span, .ord-eyebrow, .sk-muted, .pagination, .empty, .page-heading p { color: var(--sk-muted); }
+.field-help, .editor-dialog small, .sk-form small { color: var(--sk-muted); }
+/* Headings that sit on a dark green bar stay white. */
+.main-area .allocation-hero :is(h1, h2), .main-area .tsp-header h1, .main-area .ord-reference-topbar strong, .tsp-modal-head h2, .modal-backdrop .tsp-modal-head h2 { color: #fff !important; }
+.main-area .tsp-table thead th { color: #fff !important; background: var(--sk-primary); }
+:where(.content, .sk-page, .sk-card, .sk-form, .ord-page, .apo-modal, .editor, .editor-dialog, .panel) label { color: var(--sk-text); }
+
+/* ------------------------------------------------------------ buttons */
+button { border-radius: 10px; }
+.primary, .primary-action, .sk-btn-primary, .ord-view, .apo .apo-green, .tsp-primary,
+button[type=submit], .editor-dialog form button[type=submit], .button-row button[type=submit] {
+  background: var(--sk-primary) !important; border: 1px solid var(--sk-primary) !important; color: #fff !important;
+  font-weight: 700; box-shadow: none; background-image: none !important;
+}
+.primary:hover:not(:disabled), .primary-action:hover:not(:disabled), .sk-btn-primary:hover:not(:disabled), .ord-view:hover:not(:disabled), .apo .apo-green:hover,
+.tsp-primary:hover:not(:disabled), button[type=submit]:hover:not(:disabled), .editor-dialog form button[type=submit]:hover:not(:disabled), .button-row button[type=submit]:hover:not(:disabled) {
+  background: var(--sk-deep) !important; border-color: var(--sk-deep) !important; transform: none; filter: none; box-shadow: 0 4px 12px rgba(11, 40, 29, .2);
+}
+.primary:disabled, .primary-action:disabled, button[type=submit]:disabled, .sk-btn-primary:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
+button[aria-busy=true], button.is-loading { cursor: progress; }
+
+/* Secondary: white, dark green text, subtle green border. */
+button:not(.primary):not(.primary-action):not(:disabled), .tsp-btn, .tsp-tabs button {
+  background: #fff; color: var(--sk-primary); border: 1px solid var(--sk-border); font-weight: 650;
+}
+button:not(.primary):not(.primary-action):not(:disabled):hover, .tsp-btn:hover:not(:disabled) { background: var(--sk-hover); border-color: var(--sk-accent); color: var(--sk-primary); }
+button:disabled { opacity: .55; cursor: not-allowed; }
+.topbar button { color: var(--sk-primary); }
+.topbar button:hover { background: var(--sk-hover); border-color: var(--sk-accent); }
+.panel > .page-heading > button { color: var(--sk-primary); }
+.panel > .page-heading > button:hover { border-color: var(--sk-accent); color: var(--sk-primary); }
+button.sk-btn-edit:not(.primary):not(.primary-action):not(:disabled) { background: #fff; color: var(--sk-primary); border-color: var(--sk-accent); }
+button.sk-btn-edit:not(.primary):not(.primary-action):not(:disabled):hover { background: var(--sk-hover); }
+.tsp-tabs button.active { background: var(--sk-primary); border-color: var(--sk-primary); color: #fff; }
+.sk-icon-btn { color: var(--sk-primary); }
+
+/* Destructive actions stay red. */
+button.sk-btn-delete:not(.primary):not(.primary-action):not(:disabled), .danger-action, .ord-row-actions button.ord-delete:not(:disabled), .cus-btn-del, .tsp-actions button.danger {
+  background: #fff !important; color: var(--sk-error) !important; border: 1px solid var(--sk-error-border) !important;
+}
+button.sk-btn-delete:not(.primary):not(.primary-action):not(:disabled):hover, .danger-action:hover:not(:disabled), .ord-row-actions button.ord-delete:hover:not(:disabled), .cus-btn-del:hover, .tsp-actions button.danger:hover {
+  background: var(--sk-error-bg) !important; border-color: var(--sk-error) !important;
+}
+.not-btn-del { background: var(--sk-error) !important; border-color: var(--sk-error) !important; color: #fff !important; }
+.not-btn-view { background: var(--sk-accent) !important; border-color: var(--sk-accent) !important; color: #fff !important; }
+.cus-btn-view, .ord-row-actions button.ord-view:not(:disabled) { background: var(--sk-hover) !important; color: var(--sk-primary) !important; border: 1px solid var(--sk-border) !important; }
+.cus-btn-edit, .ord-row-actions button.ord-edit:not(:disabled) { background: var(--sk-warning-bg) !important; color: var(--sk-warning) !important; border: 1px solid var(--sk-warning-border) !important; }
+.ord-reference-topbar { background: var(--sk-primary); }
+.ord-reference-topbar button:hover { background: var(--sk-secondary) !important; }
+
+/* ------------------------------------------------------------ inputs */
+input:not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea { color: var(--sk-text); background-color: var(--sk-input-bg); border: 1px solid var(--sk-border); border-radius: 10px; }
+input::placeholder, textarea::placeholder { color: #8A998F; }
+input:focus, select:focus, textarea:focus, .editor-dialog input:focus, .editor-dialog select:focus, .editor-dialog textarea:focus, .sk-form input:focus, .sk-form select:focus,
+.login-card form input:not([type="checkbox"]):focus {
+  border-color: var(--sk-accent); box-shadow: 0 0 0 3px var(--sk-ring); outline: none; background-color: #fff;
+}
+input:disabled, select:disabled, textarea:disabled, input[readonly] { background-color: var(--sk-page); color: var(--sk-muted); cursor: not-allowed; }
+input[type=checkbox], input[type=radio], .login-card .inline-check input[type="checkbox"] { accent-color: var(--sk-primary); }
+input[aria-invalid=true] { border-color: var(--sk-error); }
+input[aria-invalid=true]:focus { box-shadow: 0 0 0 3px rgba(180, 35, 24, .18); border-color: var(--sk-error); }
+.sk-form input, .sk-form select, .ord-filters input, .ord-filters select, .ord-assign select { background: #fff; }
+input[type=date], .editor-dialog input[type=date] { color-scheme: light; color: var(--sk-text); background-color: #fff; }
+.sk-switch-on { background: var(--sk-accent); }
+.required-mark, .sk-req { color: var(--sk-error); }
+
+/* ------------------------------------------------------------ cards, tables, status */
+.sk-card, .sk-stat, .ord-stat, .table-wrap, .allocation-summary, .tsp-card, .stat-card { background: #fff; border: 1px solid var(--sk-border); box-shadow: var(--shadow-sm); }
+.sk-card { border-radius: 16px; }
+.sk-stat, .ord-stat { border-radius: 16px; }
+.stat-card::after { background: var(--sk-accent); }
+.ord-stat { border-left: 5px solid var(--sk-accent); }
+.ord-stat-amber { border-left-color: #C9971A; }
+.sk-stat .sk-stat-icon, .ord-stat i { border-color: var(--sk-accent); color: var(--sk-accent); }
+.ord-stat i.ord-amber { border-color: #C9971A; color: var(--sk-warning); background: var(--sk-warning-bg); }
+.sk-stat strong, .ord-stat strong, .stat-card strong { color: var(--sk-primary); }
+.sk-stat span, .ord-stat span, .stat-card span { color: var(--sk-muted); }
+.sk-card h2 svg, .sk-list-head h2 svg, .ord-head h1 svg, .ord-back, .ord-dl .ord-grand { color: var(--sk-accent); }
+.ord-dl .ord-grand { border-top-color: var(--sk-border); }
+.ord-history li { border-left-color: var(--sk-accent); }
+th, .sk-table th, .apo-table th { background: #F1F6F3; border-bottom: 1px solid var(--sk-border); }
+td, .sk-table td { border-bottom-color: #E7EEE9; color: var(--sk-text); }
+tbody tr:hover, .apo-table tbody tr:hover, .tsp-table tr:hover td { background: var(--sk-hover); }
+.tsp-table td { border-bottom-color: #E7EEE9; }
+.apo-table td:nth-child(4), .apo-table td:nth-child(5), .apo-calc-grid strong { color: var(--sk-primary); }
+.apo-calculator { border-color: var(--sk-border); background: linear-gradient(135deg, var(--sk-tint), #fff); }
+.apo .apo-grid input:focus, .apo .apo-grid select:focus { border-color: var(--sk-accent); box-shadow: 0 0 0 3px var(--sk-ring); }
+.apo .apo-new-form footer button[type="submit"] { background: var(--sk-primary); color: #fff; }
+.apo .apo-new-form footer button[type="submit"]:hover { background: var(--sk-deep); }
+.apo, .apo-modal { border-color: var(--sk-border) !important; }
+
+.sk-pill, .cus-flag-yes, .ord-pill-green, .status-active, .tsp-badge.on { background: var(--sk-hover); color: var(--sk-success); }
+.sk-pill-off, .allocation-status, .tsp-badge.off, .cus-flag { background: #EEF2EF; color: var(--sk-muted); }
+.status-active { background: var(--sk-hover); color: var(--sk-success); }
+.status-completed, .ord-pill-blue { background: #E4EEF8; color: #1D4F8C; }
+.status-cancelled, .ord-pill-red { background: var(--sk-error-bg); color: var(--sk-error); }
+.ord-pill-amber, .cus-flag-vip { background: var(--sk-warning-bg); color: var(--sk-warning); }
+.cus-crown { color: var(--sk-warning); }
+
+/* ------------------------------------------------------------ feedback */
+.error { color: var(--sk-error) !important; background: var(--sk-error-bg); border: 1px solid var(--sk-error-border); }
+.success { color: var(--sk-success); background: var(--sk-success-bg); border: 1px solid var(--sk-success-border); }
+.sk-warn { color: var(--sk-warning); }
+.tsp-ok { background: var(--sk-success-bg); color: var(--sk-success); border-left: 4px solid var(--sk-accent); }
+.tsp-bad { background: var(--sk-error-bg); color: var(--sk-error); border-left: 4px solid var(--sk-error); }
+small.error { display: block; margin-top: 2px; padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; }
+
+/* ------------------------------------------------------------ login */
+.login-wrap { background: radial-gradient(ellipse at 8% 8%, #DDEBE2 0, transparent 38%), radial-gradient(ellipse at 92% 92%, #E3EFE7 0, transparent 34%), var(--sk-page); }
+.login-card { border-color: var(--sk-border); box-shadow: 0 24px 60px rgba(11, 40, 29, .12); }
+.login-card::before { border-color: var(--sk-border); background: var(--sk-hover); color: var(--sk-primary); }
+.login-card .primary { background: var(--sk-primary) !important; box-shadow: none; }
+.login-card .primary:focus-visible { outline: 3px solid var(--sk-accent); }
+
+/* ------------------------------------------------------------ dialogs (all editors) */
+.modal-backdrop { background: rgba(11, 40, 29, .55); backdrop-filter: blur(3px); padding: 18px; }
+.editor-dialog {
+  transform: translateY(-10px);
+  --dlg-pad: 32px;
+  width: min(820px, 94vw); max-height: 92vh; overflow-y: auto; padding: var(--dlg-pad);
+  background: #fff; color: var(--sk-text); border: 1px solid var(--sk-border); border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(11, 40, 29, .28);
+}
+/* Product dialogs (they contain the image picker) get the wide layout. */
+.editor-dialog:has(.product-image-input), .editor-dialog:has(.product-variants-editor) { width: min(1100px, 94vw); }
+/* Header stays visible and the Close button stays top-right while the form scrolls. */
+.editor-dialog > .page-heading {
+  position: sticky; top: 0; z-index: 3; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 16px;
+  margin: calc(-1 * var(--dlg-pad)) calc(-1 * var(--dlg-pad)) 36px; padding: 14px var(--dlg-pad);
+  background: #fff; border-bottom: 1px solid var(--sk-border); border-radius: 16px 16px 0 0;
+}
+.editor-dialog > .page-heading h2 { margin: 0; font-size: 22px; line-height: 1.25; }
+.editor-dialog > .page-heading button { flex: 0 0 auto; margin-left: auto; }
+.editor-dialog > .error { margin: 0 0 24px; }
+
+.editor-dialog .form-grid { gap: 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 18px; }
+.editor-dialog label { margin: 0; gap: 8px; font-size: 13px; font-weight: 700; color: var(--sk-text); }
+.editor-dialog .form-grid > label { min-width: 0; align-content: start; }
+/* Long content goes full width: descriptions, images, banners, set contents. */
+.editor-dialog .form-grid > label:has(textarea, .product-image-input, .discount-banner-input, .set-contains-editor, .image-field, .google-place-field) { grid-column: 1 / -1; }
+.editor-dialog input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=file]), .editor-dialog select { min-height: 50px; padding: 12px 14px; }
+.editor-dialog textarea { min-height: 120px; padding: 12px 14px; line-height: 1.5; }
+.editor-dialog input[type=file] { min-height: 50px; padding: 8px; background: var(--sk-tint); border-style: dashed; cursor: pointer; }
+.editor-dialog input[type=file]::file-selector-button, .product-variants-editor input[type=file]::file-selector-button {
+  margin-right: 12px; padding: 8px 14px; border: 1px solid var(--sk-accent); border-radius: 8px; background: #fff; color: var(--sk-primary); font-weight: 700; cursor: pointer;
+}
+.editor-dialog input[type=file]::file-selector-button:hover { background: var(--sk-hover); }
+.editor-dialog .field-help, .editor-dialog small { display: block; margin: 0; font-size: 12.5px; font-weight: 500; line-height: 1.45; }
+.editor-dialog .form-grid input[type="checkbox"] { width: 20px; height: 20px; }
+.editor-dialog .product-image-input, .editor-dialog .image-field, .editor-dialog .discount-banner-input { display: grid; gap: 10px; }
+.editor-dialog .discount-banner-list { display: grid; gap: 8px; padding: 14px; background: var(--sk-tint); border: 1px solid var(--sk-border); border-radius: 12px; }
+.editor-dialog .discount-banner-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 500; }
+.editor-dialog .discount-banner-item span { min-width: 0; overflow-wrap: anywhere; }
+.editor-dialog .set-contains-editor { gap: 10px !important; }
+
+/* Actions: the footer sticks to the bottom of the scrolling dialog, so Save is always reachable. */
+.editor-dialog .button-row {
+  position: sticky; bottom: 0; z-index: 3; justify-content: flex-end; gap: 12px; flex-wrap: wrap;
+  margin: 32px calc(-1 * var(--dlg-pad)) calc(-1 * var(--dlg-pad)); padding: 16px var(--dlg-pad);
+  background: #fff; border-top: 1px solid var(--sk-border); border-radius: 0 0 16px 16px;
+}
+.editor-dialog .button-row button { min-height: 46px; padding: 10px 22px; }
+.editor-dialog .button-row .primary-action { order: 3; }
+
+/* ------------------------------------------------------------ Product Variants (inline in Add Product) */
+.product-variants-editor { margin-top: 32px; padding: 24px; background: var(--sk-tint); border: 1px solid #CBDDD1; border-radius: 14px; }
+.product-variants-editor .page-heading { margin: 0 0 8px; gap: 16px; }
+.product-variants-editor h3 { margin: 0; font-size: 18px; color: var(--sk-primary) !important; }
+.product-variants-editor .field-help { margin: 0 0 8px; }
+.product-variant-row {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px 24px; margin-top: 16px; padding: 20px;
+  background: #fff; border: 1px solid var(--sk-border); border-radius: 12px; align-items: end;
+}
+.product-variant-row label { gap: 8px; font-size: 13px; font-weight: 700; color: var(--sk-text); }
+.product-variant-row input:not([type=checkbox]), .product-variant-row select { min-height: 48px; padding: 10px 12px; }
+.product-variant-row input[readonly] { background: var(--sk-hover); color: var(--sk-primary); font-weight: 700; }
+.product-variant-row .error { margin: 0; }
+.product-variant-row button.sk-btn-delete { min-height: 48px; justify-content: center; }
+.product-variants-add-bottom { border-top-color: #CBDDD1; }
+
+/* ------------------------------------------------------------ misc surfaces */
+.place-suggestions { border-color: var(--sk-border); box-shadow: 0 8px 24px rgba(11, 40, 29, .16); }
+.place-suggestion { color: var(--sk-text); }
+.place-suggestion:hover, .place-suggestion:focus { background: var(--sk-hover); }
+.tsp { --g: var(--sk-primary); --g2: var(--sk-accent); --bg: var(--sk-page); }
+.tsp-modal-body input:not([type=checkbox]), .tsp-modal-body select, .tsp-modal-body textarea, .tsp-search, .tsp-users, .tsp-preview { border-color: var(--sk-border); }
+.allocation-hero { background: var(--sk-primary); }
+.not-full { color: var(--sk-text); }
+
+/* ------------------------------------------------------------ responsive */
+@media (max-width: 1024px) {
+  .editor-dialog { --dlg-pad: 24px; }
+  .editor-dialog .form-grid { gap: 20px; }
+}
+@media (max-width: 760px) {
+  .modal-backdrop { padding: 10px; }
+  .editor-dialog, .editor-dialog:has(.product-image-input), .editor-dialog:has(.product-variants-editor) { --dlg-pad: 18px; width: 100%; max-height: 94vh; border-radius: 14px; }
+  .editor-dialog > .page-heading { border-radius: 14px 14px 0 0; padding-top: 14px; padding-bottom: 14px; margin-bottom: 20px; }
+  .editor-dialog > .page-heading h2 { font-size: 19px; }
+  .editor-dialog .form-grid { grid-template-columns: 1fr; gap: 20px; }
+  .editor-dialog .button-row { margin-top: 24px; border-radius: 0 0 14px 14px; }
+  .editor-dialog .button-row button { flex: 1 1 auto; }
+  .product-variants-editor { padding: 16px; margin-top: 24px; }
+  .product-variant-row { padding: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+  .topbar { background: #fff; }
+}
+@media (max-width: 480px) {
+  .product-variant-row { grid-template-columns: minmax(0, 1fr); }
+  .editor-dialog .button-row { flex-direction: column-reverse; }
+}

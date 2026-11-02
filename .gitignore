@@ -1,0 +1,27 @@
+
+# Publishing exclusions
+admin_frontend/dist.bak_*/
+admin_frontend/*.bak
+admin_frontend/*backup*/
+admin_frontend/dist/
+admin_frontend/node_modules/
+django_backend/__pycache__/
+django_backend/**/*.pyc
+django_backend/.venv/
+django_backend/venv/
+.env
+.env.*
+!.env.example
+!.env.test.example
+!.env.postgres.example
+django_backend/backups/
+*.dump
+*.sql
+*.sqlite3
+*.log
+*.bak
+*.bak_*
+*.backup
+__pycache__/
+.DS_Store
+Thumbs.db

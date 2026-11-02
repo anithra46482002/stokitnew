@@ -1,0 +1,55 @@
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
+const core = path.join(process.env.TEMP || process.env.TMP, 'stokit-playwright', 'node_modules', 'playwright-core', 'index.mjs');
+const { chromium } = await import(pathToFileURL(core).href);
+const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true });
+const page = await browser.newPage();
+await page.addInitScript(() => { sessionStorage.setItem('stokit_admin_token', 'e2e-fake-token'); sessionStorage.setItem('stokit_admin_user', JSON.stringify({ id: 1, username: 'e2e', role: 'SUPER_ADMIN' })); });
+const rows = [{ id: 1, username: 'existing_driver', email: 'existing@example.invalid', full_name: 'Existing Driver', phone: '9876543210', address: 'Kochi', status: 'ACTIVE', created_at: '2026-10-01T10:00:00Z', updated_at: null }];
+await page.route('**/admin-api/**', async (route) => {
+ const req = route.request(); const u = new URL(req.url());
+ if (req.method() === 'OPTIONS') return route.fulfill({ status: 200, headers: { 'access-control-allow-origin': '*' } });
+ if (u.pathname.endsWith('/staff') && req.method() === 'GET') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ count: rows.length, page: Number(u.searchParams.get('page') || 1), page_size: 20, results: rows }) });
+ if (u.pathname.endsWith('/staff') && req.method() === 'POST') { const data = req.postDataJSON(); rows.push({ id: 90001, ...data, full_name: data.full_name, status: data.status, created_at: '2026-10-30T10:00:00Z', updated_at: '2026-10-30T10:00:00Z' }); return route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ id: 90001, username: data.username, email: data.email, full_name: data.full_name, status: data.status, created_at: rows.at(-1).created_at, updated_at: rows.at(-1).updated_at }) }); }
+ if (u.pathname.endsWith('/staff') && req.method() === 'PATCH') { const data = req.postDataJSON(); const row = rows.find((x) => x.id === Number(data.id)); Object.assign(row, { full_name: data.full_name || row.full_name, status: data.status || row.status, updated_at: '2026-10-30T10:10:00Z' }); return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: row.id, username: row.username, email: row.email, full_name: row.full_name, status: row.status, created_at: row.created_at, updated_at: row.updated_at }) }); }
+ return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ profile: {} }) });
+});
+await page.goto('http://127.0.0.1:5173/delivery');
+await page.getByRole('heading', { name: 'Delivery Boy' }).waitFor({ timeout: 15000 });
+await page.getByRole('table').waitFor({ timeout: 15000 });
+if (await page.getByRole('columnheader', { name: 'created at' }).count() !== 1 || await page.getByRole('columnheader', { name: 'updated at' }).count() !== 1) throw new Error('Audit date columns missing');
+console.log('PASS: Delivery Boy List screen displays audit date columns and legacy row');
+await page.getByRole('button', { name: 'Add new' }).click();
+for (const field of ['Username','Email Address','Full Name','Password (10+ characters)','Confirm Password','Phone Number','Account Status']) { if (await page.getByLabel(field).count() !== 1) throw new Error('Missing field: ' + field); }
+await page.getByLabel('Password (10+ characters)').fill('ExamplePassword123');
+await page.getByLabel('Confirm Password').fill('DifferentPassword123');
+await page.getByLabel('Username').fill('ui_delivery_validation');
+await page.getByLabel('Email Address').fill('ui_delivery_validation@example.invalid');
+await page.getByLabel('Full Name').fill('UI Validation Driver');
+await page.getByLabel('Phone Number').fill('9876543210');
+await page.getByRole('button', { name: 'Save changes' }).click();
+await page.getByRole('dialog').getByRole('alert').waitFor();
+if (!(await page.getByRole('dialog').getByRole('alert').innerText()).includes('Passwords do not match')) throw new Error('Add form did not validate password confirmation');
+console.log('PASS: Add form validates password confirmation before submission');
+await page.getByLabel('Confirm Password').fill('ExamplePassword123');
+await page.getByRole('button', { name: 'Save changes' }).click();
+await page.getByRole('status').filter({ hasText: 'Saved successfully.' }).waitFor();
+const testRow = page.locator('tbody tr').filter({ hasText: 'ui_delivery_validation' });
+await testRow.waitFor();
+console.log('PASS: Add form submits create request and new row appears');
+await testRow.getByRole('button', { name: 'Edit' }).click();
+await page.getByRole('heading', { name: 'Edit Delivery Boy' }).waitFor();
+if (await page.getByLabel('Username').inputValue() !== 'ui_delivery_validation') throw new Error('Edit form did not load saved row values');
+if (await page.getByLabel('Password (10+ characters)').getAttribute('required')) throw new Error('Password must be optional on edit');
+if (await page.getByLabel('Confirm Password').getAttribute('required')) throw new Error('Password confirmation must be optional on edit');
+console.log('PASS: Edit form loads saved values and optional password fields');
+await page.getByLabel('Full Name').fill('UI Validation Driver Edited');
+await page.getByLabel('Account Status').selectOption('INACTIVE');
+await page.getByRole('button', { name: 'Save changes' }).click();
+await page.getByRole('status').filter({ hasText: 'Saved successfully.' }).waitFor();
+await testRow.getByText('Inactive').waitFor();
+console.log('PASS: Edit form submits PATCH and persists Inactive status');
+await page.getByLabel('Search records').fill('ui_delivery_validation');
+await testRow.waitFor();
+console.log('PASS: Search filters the Delivery Boy list');
+await browser.close();
