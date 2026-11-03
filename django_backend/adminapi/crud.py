@@ -217,7 +217,7 @@ class ProductCRUDView(APIView):
     @staticmethod
     def _get_discount_banners(product_id):
         with connection.cursor() as cursor:
-            cursor.execute('SELECT image_path FROM zg_discount_banners WHERE product_id = %s ORDER BY id ASC', [product_id])
+            cursor.execute('SELECT image_path FROM zg_product_discount_banners WHERE product_id = %s ORDER BY id ASC', [product_id])
             return [row[0] for row in cursor.fetchall()]
 
     @staticmethod
@@ -336,7 +336,7 @@ class ProductCRUDView(APIView):
         if ids and all(isinstance(product, Product) for product in products):
             with connection.cursor() as cursor:
                 placeholders = ','.join(['%s'] * len(ids))
-                cursor.execute(f'SELECT product_id, image_path FROM zg_discount_banners WHERE product_id IN ({placeholders}) ORDER BY id ASC', ids)
+                cursor.execute(f'SELECT product_id, image_path FROM zg_product_discount_banners WHERE product_id IN ({placeholders}) ORDER BY id ASC', ids)
                 for banner_pid, image_path in cursor.fetchall():
                     discount_banners.setdefault(banner_pid, []).append(image_path)
         images = {}
@@ -430,7 +430,7 @@ class ProductCRUDView(APIView):
                 with transaction.atomic():
                     with connection.cursor() as cursor:
                         for image_path in discount_banners:
-                            cursor.execute('INSERT INTO zg_discount_banners (product_id, image_path) VALUES (%s, %s)', [row.product_id, image_path])
+                            cursor.execute('INSERT INTO zg_product_discount_banners (product_id, image_path) VALUES (%s, %s)', [row.product_id, image_path])
             except Exception as exc:
                 log_db_error('Product discount banner create', exc)
                 row.delete()
@@ -596,9 +596,9 @@ class ProductCRUDView(APIView):
             try:
                 with transaction.atomic():
                     with connection.cursor() as cursor:
-                        cursor.execute('DELETE FROM zg_discount_banners WHERE product_id = %s', [pid])
+                        cursor.execute('DELETE FROM zg_product_discount_banners WHERE product_id = %s', [pid])
                         for image_path in discount_banners:
-                            cursor.execute('INSERT INTO zg_discount_banners (product_id, image_path) VALUES (%s, %s)', [pid, image_path])
+                            cursor.execute('INSERT INTO zg_product_discount_banners (product_id, image_path) VALUES (%s, %s)', [pid, image_path])
             except Exception as exc:
                 log_db_error('Product discount banner update', exc)
                 return Response({'detail': 'Product fields saved, but discount banners could not be updated; reload and retry'}, status=503)
@@ -655,7 +655,7 @@ class ProductCRUDView(APIView):
                     if variant_ids:
                         marks = ','.join(['%s'] * len(variant_ids))
                         cursor.execute('DELETE FROM a_cart WHERE variant_id IN (' + marks + ')', list(variant_ids))
-                    cursor.execute('DELETE FROM zg_discount_banners WHERE product_id = %s', [pid])
+                    cursor.execute('DELETE FROM zg_product_discount_banners WHERE product_id = %s', [pid])
                     cursor.execute('DELETE FROM zg_favorites WHERE product_id = %s', [pid])
                 ProductImage.objects.filter(product_id=pid).delete()
                 Variant.objects.filter(product_id=pid).delete()

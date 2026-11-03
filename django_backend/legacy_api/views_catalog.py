@@ -244,7 +244,7 @@ def product_api(request):
     images = [legacy_image_url(r["image_path"], request) for r in fetchall(
         "SELECT image_path FROM zg_product_images WHERE product_id = %s ORDER BY main DESC, image_id ASC", [pid]) if r["image_path"]]
     banners = [legacy_image_url(r["image_path"], request) for r in fetchall(
-        "SELECT image_path FROM zg_discount_banners WHERE product_id = %s ORDER BY id ASC", [pid]) if r["image_path"]]
+        "SELECT image_path FROM zg_product_discount_banners WHERE product_id = %s ORDER BY id ASC", [pid]) if r["image_path"]]
 
     set_contains = []
     if p["set_contains"]:

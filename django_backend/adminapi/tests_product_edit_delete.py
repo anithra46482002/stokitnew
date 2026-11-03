@@ -151,7 +151,7 @@ class ProductDeleteTests(SimpleTestCase):
         self.mocks.variant.assert_any_call(product_id=4)
         self.mocks.image.assert_called_once_with(product_id=4)
         statements = [call.args[0] for call in self.mocks.cursor.execute.call_args_list]
-        self.assertTrue(any("DELETE FROM zg_discount_banners" in s for s in statements), "banner rows (real FK) must be removed first")
+        self.assertTrue(any("DELETE FROM zg_product_discount_banners" in s for s in statements), "banner rows (real FK) must be removed first")
         self.assertTrue(any("DELETE FROM zg_favorites" in s for s in statements))
         self.assertFalse(any("zg_order" in s for s in statements), "order history is never touched")
 

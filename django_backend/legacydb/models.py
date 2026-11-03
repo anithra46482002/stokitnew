@@ -159,6 +159,20 @@ class ProductImage(models.Model):
         db_table = "zg_product_images"
 
 
+class ProductDiscountBanner(models.Model):
+    """Product-specific discount banner (id, product_id, image_path, created_at).
+
+    Created by migration 0006 under its own name because production's zg_discount_banners is an unrelated table."""
+    id = models.AutoField(primary_key=True)
+    product_id = models.IntegerField()
+    image_path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = "zg_product_discount_banners"
+
+
 class Variant(models.Model):
     variant_id = models.AutoField(primary_key=True)
     variant_name = models.CharField(max_length=255)

@@ -7,20 +7,20 @@ const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const pages = readdirSync(new URL('./', import.meta.url)).filter((f) => f.endsWith('.jsx'));
 
 // ---- favicon ---------------------------------------------------------------------------------------------------
-test('favicon points at the official StokIt favicon PNG in public/, with a cache-busting version and the StokIt Admin title', () => {
+test('favicon points at the official StokIt favicon PNG in public/, with a cache-busting version and the exact Stokit_Admin title', () => {
   const icon = html.match(/<link rel="icon"[^>]*href="([^"]+)"/);
   assert.ok(icon, 'an icon link exists');
   assert.match(icon[1], /^\/stokit-favicon\.png\?v=\d+$/);
   assert.ok(existsSync(new URL('../public/stokit-favicon.png', import.meta.url)), 'the referenced file exists in public/');
-  assert.match(html, /<title>StokIt Admin<\/title>/);
+  assert.match(html, /<title>Stokit_Admin<\/title>/);
   assert.ok(!/favicon\.svg|vite\.svg/.test(html), 'no default Vite favicon reference');
   assert.ok(!existsSync(new URL('../public/favicon.svg', import.meta.url)), 'the default Vite favicon is not shipped');
 });
 
 // ---- empty state -----------------------------------------------------------------------------------------------
-test('the shared empty state says exactly "No data found"', () => {
+test('the shared empty state says exactly "No records"', () => {
   const component = src('EmptyState.jsx');
-  assert.match(component, /const EMPTY_MESSAGE = 'No data found';/);
+  assert.match(component, /const EMPTY_MESSAGE = 'No records';/);
   assert.match(component, /export function EmptyState\(/);
   assert.match(component, /export function EmptyRow\(/);
 });
@@ -33,7 +33,7 @@ test('no page still renders the technical or per-page empty wording', () => {
   }
 });
 
-test('every empty-state render sits behind a loading and an error guard, so failures are never shown as "No data found"', () => {
+test('every empty-state render sits behind a loading and an error guard, so failures are never shown as "No records found"', () => {
   const guarded = {
     'BannersPage.jsx': '!loading && !error && rows.length === 0 && <EmptyState />',
     'CategoriesPage.jsx': '!loading && !error && rows.length === 0 && <EmptyRow',

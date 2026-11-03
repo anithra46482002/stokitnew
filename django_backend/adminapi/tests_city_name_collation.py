@@ -43,6 +43,9 @@ class SourceCollationEvidenceTests(SimpleTestCase):
         for row in _load()["detail"]:
             self.assertEqual(row["mariadb_equal"], row["mariadb_unique_collision"], row["case"])
 
+    # The candidate DDL is a GENERATED artifact (scripts/generate_legacy_pg_ddl.py) and *.sql is git-ignored, so a clean
+    # checkout does not contain it. Skip with an explicit reason rather than fabricate the file.
+    @unittest.skipUnless(DDL.exists(), "STOKIT_COMPLETE_DDL_CANDIDATE.sql is generated (git-ignored); run scripts/generate_legacy_pg_ddl.py")
     def test_ddl_candidate_declares_no_collation_for_city_name(self):
         text = DDL.read_text(encoding="utf-8")
         block = text.split('CREATE TABLE "zg_location"', 1)[1].split(");", 1)[0]
